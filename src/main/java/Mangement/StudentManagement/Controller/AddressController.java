@@ -2,7 +2,7 @@ package Mangement.StudentManagement.Controller;
 import Mangement.StudentManagement.Controller.AddressController;
 
 import Mangement.StudentManagement.Service.AddressService;
-
+import Mangement.StudentManagement.Utility.ApiResponseBuilder;
 import Mangement.StudentManagement.DTO.Request.*;
 import Mangement.StudentManagement.DTO.Response.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,52 +30,86 @@ public class AddressController {
     }
   @Operation(summary="Save Address")
     @PostMapping
-    public ResponseEntity<AddressResponseDTO> saveAddress(@Valid @RequestBody AddressRequestDTO dto){
+    public ResponseEntity<ApiResponse<AddressResponseDTO>> saveAddress(@Valid @RequestBody AddressRequestDTO dto){
         AddressResponseDTO response=addressservice.saveAddress(dto);
 
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                ApiResponseBuilder.success(201,
+                        "Address saved Successfully",
+                        response),HttpStatus.CREATED);
     }
     @Operation(summary="Get All Addresses")
     @GetMapping
-    public ResponseEntity<List<AddressResponseDTO>>getAllAddresses()
+    public ResponseEntity<ApiResponse<List<AddressResponseDTO>>>getAllAddresses()
     {
         List<AddressResponseDTO>list=addressservice.getAllAddresses();
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(
+                ApiResponseBuilder.success(
+                        200,
+                        "Address fetched Successfully",
+                        list)
+        );
     }
 
     @Operation(summary="Get Address By Id")
     @GetMapping("/{id}")
-     public ResponseEntity<AddressResponseDTO> getAddressById(@PathVariable int id){
+     public ResponseEntity<ApiResponse<AddressResponseDTO>> getAddressById(@PathVariable int id){
         AddressResponseDTO response=addressservice.getAddressById(id);
-           return ResponseEntity.ok(response);
+           return ResponseEntity.ok(
+                   ApiResponseBuilder.success(
+                           200,
+                           "Address fetched successfully",
+                           response)
+           );
     }
 
    @Operation(summary="Update Address")
     @PutMapping("/{id}")
-    public ResponseEntity<AddressResponseDTO> updateAddress(
+    public ResponseEntity<ApiResponse<AddressResponseDTO>> updateAddress(
             @PathVariable int id,
             @Valid @RequestBody AddressRequestDTO dto){
 
         AddressResponseDTO updated= addressservice.updateAddress(id,dto);
 
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(
+                ApiResponseBuilder.success(
+                        200,
+                        "Address updated successfully",
+                        updated)
+                );
     }
 
     @Operation(summary="Deleting address")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String>deleteAddress(@PathVariable int id){
+    public ResponseEntity<ApiResponse<String>>deleteAddress(@PathVariable int id){
         addressservice.deleteAddressById(id);
-        return  ResponseEntity.ok(" Address deleted Successfully");
+        return  ResponseEntity.ok(
+                ApiResponseBuilder.success(
+                        200,
+                        "Address deleted Successfully",
+                        null
+                ));
     }
 
     @GetMapping("/exists/{id}")
-    public ResponseEntity<Boolean> existsById(@PathVariable int id) {
-        return ResponseEntity.ok(addressservice.existsById(id));
+    public ResponseEntity<ApiResponse<Boolean>> existsById(@PathVariable int id) {
+        return ResponseEntity.ok(
+                ApiResponseBuilder.success(
+                        200,
+                        "Existence checked successfully",
+                        addressservice.existsById(id)
+                )
+                );
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> countAddresses() {
-        return ResponseEntity.ok(addressservice.countAddresses());
+    public ResponseEntity<ApiResponse<Long>> countAddresses() {
+        return ResponseEntity.ok(
+                ApiResponseBuilder.success(
+                        200,
+                        "Address count fetch successfully ",
+                        addressservice.countAddresses()
+                ));
     }
 
 

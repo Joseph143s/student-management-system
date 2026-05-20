@@ -47,7 +47,7 @@ public class AddressServiceImpl implements AddressService {
     }
    @Override
     public AddressResponseDTO updateAddress(int id,AddressRequestDTO dto){
-        Address existingaddress=addressrepo.findById(id).orElseThrow(()->new RuntimeException("Address not found with that id"));
+        Address existingaddress=addressrepo.findById(id).orElseThrow(()->new AddressNotFoundException("Address not found with that id"));
         existingaddress.setCity(dto.getCity());
         existingaddress.setState(dto.getState());
         existingaddress.setPincode(dto.getPincode());
@@ -57,7 +57,7 @@ public class AddressServiceImpl implements AddressService {
   @Override
     public void deleteAddressById(int id){
 
-        Address address=addressrepo.findById(id).orElseThrow(()->new RuntimeException("Address not found with that id :"+ id));
+        Address address=addressrepo.findById(id).orElseThrow(()->new AddressNotFoundException("Address not found with that id :"+ id));
          addressrepo.delete(address);
   }
   @Override

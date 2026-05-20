@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class CourseResponseDTO {
     private int courseId;
-    private String Coursename;
+    private String coursename;
     private String duration;
     private double fee;
 }

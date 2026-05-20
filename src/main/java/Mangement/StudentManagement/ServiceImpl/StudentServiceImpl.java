@@ -32,7 +32,7 @@ public class StudentServiceImpl implements StudentService{
        Course course=courserepo.findById(dto.getCourseId())
                .orElseThrow(()->new CourseNotFoundException("Course not Found"));
        Address address=addressrepo.findById(dto.getAddressId())
-               .orElseThrow(()->new RuntimeException("Address not Found"));
+               .orElseThrow(()->new AddressNotFoundException("Address not Found"));
        Student student=StudentMapper.mapToStudent(dto,course,address);
         Student savestudent=studentrepo.save(student);
         return StudentMapper.mapToStudentResponseDTO(savestudent);
@@ -51,7 +51,7 @@ public class StudentServiceImpl implements StudentService{
     public StudentResponseDTO updateStudent(int id,StudentRequestDTO dto){
         Student existingstudent=studentrepo.findById(id).orElseThrow(()->new StudentNotFoundException("Student not found"));
         Course course=courserepo.findById(dto.getCourseId()).orElseThrow(()->new CourseNotFoundException("Course not Found"));
-        Address address=addressrepo.findById(dto.getAddressId()).orElseThrow(()->new RuntimeException("Address not Found"));
+        Address address=addressrepo.findById(dto.getAddressId()).orElseThrow(()->new AddressNotFoundException("Address not Found"));
         existingstudent.setName(dto.getName());
         existingstudent.setEmail(dto.getEmail());
         existingstudent.setCourse(course);
