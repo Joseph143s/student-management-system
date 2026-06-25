@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.validation.constraints.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,10 +21,13 @@ public class StudentRequestDTO {
     @Email(message="Invalid email format")
     private String email;
 
-    @Positive(message="Course Id must be greater than 0")
-    private int courseId;
+    private List<@Positive(message = "Course Id must be greater than 0") Integer> courseIds;
 
-    @Positive(message="Addressid must be greater than 0")
+
+  /*  @Positive(message="Address id must be greater than 0")
     private int addressId;
+*/
+    @Positive(message=" department id must be greater than 0")
+    private int departmentId;
 
 }

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler{
 
     @ExceptionHandler(CourseNotFoundException.class)
     public ResponseEntity<ApiResponse<String>> handleCourseNotFound(CourseNotFoundException ex) {
@@ -61,6 +61,59 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>>
+    handleDepartmentNotFound(DepartmentNotFoundException ex){
+
+        return new ResponseEntity<>(
+                ApiResponseBuilder.error(
+                        404,
+                        ex.getMessage(),
+                        null
+                ),
+                HttpStatus.NOT_FOUND
+        );
+    }
+    @ExceptionHandler(FacultyNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>>
+    handleFacultyNotFound(FacultyNotFoundException ex){
+
+        return new ResponseEntity<>(
+                ApiResponseBuilder.error(
+                        404,
+                        ex.getMessage(),
+                        null
+                ),
+                HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(EnrollmentNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>>
+    handleEnrollmentNotFound(EnrollmentNotFoundException ex){
+
+        return new ResponseEntity<>(
+                ApiResponseBuilder.error(
+                        404,
+                        ex.getMessage(),
+                        null
+                ),
+                HttpStatus.NOT_FOUND
+        );
+    }
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<String>>
+    handleUserAlreadyExists(UserAlreadyExistsException ex){
+
+        return new ResponseEntity<>(
+                ApiResponseBuilder.error(
+                        409,
+                        ex.getMessage(),
+                        null
+                ),
+                HttpStatus.CONFLICT
+        );
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleGeneralException(Exception ex) {
 

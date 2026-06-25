@@ -19,4 +19,7 @@ public class CourseRequestDTO {
 
     @Positive(message = "Fee must be greater than 0")
     private double fee;
+
+    @Positive(message="Department id must be greater than 0")
+    private int departmentId;
 }

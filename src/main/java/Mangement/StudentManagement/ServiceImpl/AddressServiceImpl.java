@@ -1,71 +1,99 @@
 package Mangement.StudentManagement.ServiceImpl;
-import Mangement.StudentManagement.Repository.*;
-import Mangement.StudentManagement.Service.*;
-import Mangement.StudentManagement.Exception.*;
-import Mangement.StudentManagement.Entity.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import Mangement.StudentManagement.DTO.Request.AddressRequestDTO;
+import Mangement.StudentManagement.DTO.Response.AddressResponseDTO;
+import Mangement.StudentManagement.Entity.Address;
+import Mangement.StudentManagement.Entity.Student;
+import Mangement.StudentManagement.Exception.AddressNotFoundException;
+import Mangement.StudentManagement.Exception.StudentNotFoundException;
+import Mangement.StudentManagement.Mapper.AddressMapper;
+import Mangement.StudentManagement.Repository.AddressRepository;
+import Mangement.StudentManagement.Repository.StudentRepository;
+import Mangement.StudentManagement.Service.AddressService;
 import org.springframework.stereotype.Service;
-import Mangement.StudentManagement.DTO.Request.*;
-import Mangement.StudentManagement.DTO.Response.*;
-import Mangement.StudentManagement.Mapper.*;
-import org.springframework.web.bind.annotation.*;
-import java.util.*;
+
+import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 public class AddressServiceImpl implements AddressService {
 
-
     private final AddressRepository addressrepo;
+    private final StudentRepository studentrepo;  // add this
 
-    public AddressServiceImpl(AddressRepository repository) {
-        this.addressrepo = repository;
+    public AddressServiceImpl(AddressRepository addressrepo,
+                              StudentRepository studentrepo) {
+        this.addressrepo = addressrepo;
+        this.studentrepo = studentrepo;
     }
 
     @Override
-    public AddressResponseDTO saveAddress(AddressRequestDTO dto){
+    public AddressResponseDTO saveAddress(AddressRequestDTO dto) {
+        // fetch student
+        Student student = studentrepo.findById(dto.getStudentId())
+                .orElseThrow(() -> new StudentNotFoundException(
+                        "Student not found with id: " + dto.getStudentId()));
 
-        Address address=AddressMapper.mapToAddress(dto);
-
-        Address saveaddress=addressrepo.save(address);
-
-        return AddressMapper.mapToAddressResponseDTO(saveaddress);
+        Address address = AddressMapper.mapToAddress(dto);
+        address.setStudent(student);  // link address to student
+        Address saved = addressrepo.save(address);
+        return AddressMapper.mapToAddressResponseDTO(saved);
     }
-  @Override
-    public List<AddressResponseDTO> getAllAddresses(){
 
-        List<Address>address=addressrepo.findAll();
+    // ─── Get All ──────────────────────────────────────────────────
 
-        return address.stream().
-                map(AddressMapper::mapToAddressResponseDTO)
+    @Override
+    public List<AddressResponseDTO> getAllAddresses() {
+        return addressrepo.findAll()
+                .stream()
+                .map(AddressMapper::mapToAddressResponseDTO)
                 .collect(Collectors.toList());
-  }
-  @Override
-    public AddressResponseDTO getAddressById(int id){
-        Address address= addressrepo.findById(id)
-                .orElseThrow(()->new RuntimeException("Address not found with thwt id:"+id));
-       return AddressMapper.mapToAddressResponseDTO(address);
     }
-   @Override
-    public AddressResponseDTO updateAddress(int id,AddressRequestDTO dto){
-        Address existingaddress=addressrepo.findById(id).orElseThrow(()->new AddressNotFoundException("Address not found with that id"));
-        existingaddress.setCity(dto.getCity());
-        existingaddress.setState(dto.getState());
-        existingaddress.setPincode(dto.getPincode());
-        Address updatedaddress= addressrepo.save(existingaddress);
-        return AddressMapper.mapToAddressResponseDTO(updatedaddress);
-  }
-  @Override
-    public void deleteAddressById(int id){
 
-        Address address=addressrepo.findById(id).orElseThrow(()->new AddressNotFoundException("Address not found with that id :"+ id));
-         addressrepo.delete(address);
-  }
-  @Override
-  public boolean existsById(int id){
+    // ─── Get By Id ────────────────────────────────────────────────
+
+    @Override
+    public AddressResponseDTO getAddressById(int id) {
+        Address address = addressrepo.findById(id)
+                .orElseThrow(() -> new AddressNotFoundException(
+                        "Address not found with that id: " + id)); // ✅ fixed exception + typo
+        return AddressMapper.mapToAddressResponseDTO(address);
+    }
+
+    // ─── Update ───────────────────────────────────────────────────
+
+    @Override
+    public AddressResponseDTO updateAddress(int id, AddressRequestDTO dto) {
+        Address existing = addressrepo.findById(id)
+                .orElseThrow(() -> new AddressNotFoundException(
+                        "Address not found with that id: " + id));
+
+        existing.setCity(dto.getCity());
+        existing.setState(dto.getState());
+        existing.setPincode(dto.getPincode());
+
+        return AddressMapper.mapToAddressResponseDTO(addressrepo.save(existing));
+    }
+
+    // ─── Delete ───────────────────────────────────────────────────
+
+    @Override
+    public void deleteAddressById(int id) {
+        Address address = addressrepo.findById(id)
+                .orElseThrow(() -> new AddressNotFoundException(
+                        "Address not found with that id: " + id));
+        addressrepo.delete(address);
+    }
+
+    // ─── Exists / Count ───────────────────────────────────────────
+
+    @Override
+    public boolean existsById(int id) {
         return addressrepo.existsById(id);
-  }
-   @Override
-    public long countAddresses(){
+    }
+
+    @Override
+    public long countAddresses() {
         return addressrepo.count();
-   }
+    }
 }

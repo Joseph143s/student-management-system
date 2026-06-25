@@ -12,4 +12,6 @@ public interface CourseService {
     CourseResponseDTO updateCourse(int id,CourseRequestDTO course);
     boolean existsById(int id);
     long countCourses();
+    List<CourseResponseDTO>getCoursesByDepartment(int departmentId);
+    List<StudentResponseDTO> getStudentsInCourse(int courseId);
 }

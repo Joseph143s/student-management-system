@@ -26,4 +26,7 @@ public class AddressRequestDTO {
 
     private String pincode;
 
+    @NotNull(message = "Student ID cannot be null")
+    private int studentId;
+
 }

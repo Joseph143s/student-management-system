@@ -17,5 +17,8 @@ public class Address {
     private String city;
     private String state;
     private String pincode;
+    @OneToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
 }

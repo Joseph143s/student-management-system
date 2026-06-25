@@ -11,11 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.*;
 @RestController
-@RequestMapping("/Address")
+@RequestMapping("/addresses")
 @Tag(
          name="Address APIs",
         description="Operation related to Address Management"
@@ -28,6 +29,8 @@ public class AddressController {
 
         this.addressservice = addressservice;
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
   @Operation(summary="Save Address")
     @PostMapping
     public ResponseEntity<ApiResponse<AddressResponseDTO>> saveAddress(@Valid @RequestBody AddressRequestDTO dto){
@@ -38,6 +41,8 @@ public class AddressController {
                         "Address saved Successfully",
                         response),HttpStatus.CREATED);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary="Get All Addresses")
     @GetMapping
     public ResponseEntity<ApiResponse<List<AddressResponseDTO>>>getAllAddresses()
@@ -51,6 +56,7 @@ public class AddressController {
         );
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT'.'ADMIN')")
     @Operation(summary="Get Address By Id")
     @GetMapping("/{id}")
      public ResponseEntity<ApiResponse<AddressResponseDTO>> getAddressById(@PathVariable int id){
@@ -63,6 +69,7 @@ public class AddressController {
            );
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT','ADMIN')")
    @Operation(summary="Update Address")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<AddressResponseDTO>> updateAddress(
@@ -79,6 +86,8 @@ public class AddressController {
                 );
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT','ADMIN')")
+
     @Operation(summary="Deleting address")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>>deleteAddress(@PathVariable int id){
@@ -91,6 +100,7 @@ public class AddressController {
                 ));
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT','ADMIN')")
     @GetMapping("/exists/{id}")
     public ResponseEntity<ApiResponse<Boolean>> existsById(@PathVariable int id) {
         return ResponseEntity.ok(
@@ -102,6 +112,7 @@ public class AddressController {
                 );
     }
 
+     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/count")
     public ResponseEntity<ApiResponse<Long>> countAddresses() {
         return ResponseEntity.ok(

@@ -19,7 +19,13 @@ public class Course {
     private String coursename;
     private String duration;
     private double fee;
-    @ManyToMany(mappedBy="courses")
-    private List<Student>students;
 
+    @OneToMany(mappedBy = "course")
+    private List<Enrollment> enrollments;
+
+    @ManyToOne
+    @JoinColumn(
+            name="department_id"
+    )
+    private Department department;
 }

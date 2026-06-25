@@ -5,14 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
+import java.util.List;
+
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentResponseDTO {
+
     private int id;
+
     private String name;
+
     private String email;
-    private String coursename;
+
+    private List<String> courseNames;
+
     private String city;
+
+    private String departmentName;
 }
