@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration Console - Navigation Suite</title>
+    <!-- 🎨 Connected to External Dashboard Stylesheet -->
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body class="admin-dashboard-body">
+
+    <!-- 🧭 LEFT NAVIGATION SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            🏛️ Campus Admin
+        </div>
+        <ul class="sidebar-menu">
+            <!-- 🏢 Department Operations Links -->
+            <li class="sidebar-item active" data-target="view-depts">📂 List of Departments</li>
+            <li class="sidebar-item" data-target="deploy-dept">➕ Deploy Department</li>
+
+            <!-- 📚 Course Operations Links -->
+            <li class="sidebar-item" data-target="view-courses">📖 List of Courses</li>
+            <li class="sidebar-item" data-target="deploy-course">➕ Deploy Courses</li>
+
+            <!-- 🧑‍🏫 Faculty Operations Links -->
+            <li class="sidebar-item" data-target="register-faculty">✍️ Register Faculty</li>
+            <li class="sidebar-item" data-target="view-faculty">👥 List of All Faculty</li>
+
+            <!-- 🎓 Student Operations Links -->
+            <li class="sidebar-item" data-target="register-student">📝 Student Registration</li>
+            <li class="sidebar-item" data-target="view-students">👥 List of Registered Students</li>
+            <li class="sidebar-item" data-target="view-enrolled">🎓 List of Students Enrolled</li>
+        </ul>
+        <div class="sidebar-footer">
+            <button id="logoutBtn" class="logout-btn">🚪 Terminate Session</button>
+        </div>
+    </nav>
+
+    <!-- 🖥️ MAIN WORKSPACE CONSOLE WINDOW -->
+    <main class="main-content">
+
+        <div class="top-navbar">
+            <h2 id="currentNavTitle" class="nav-title-header">List of Departments</h2>
+            <div>
+                <strong>Identity Flag:</strong> <span id="adminName" class="badge-text-admin">Workspace Management Active</span>
+            </div>
+        </div>
+
+        <!-- ──────────────── TAB PANEL CONTENT LAYERS ──────────────── -->
+
+        <!-- 📂 TAB 1: LIST OF DEPARTMENTS -->
+        <div id="view-depts" class="tab-panel active">
+            <div class="panel">
+                <h3>Deployed Departments Catalog</h3>
+                <div class="scrollable-table-wrapper">
+                    <table class="nested-clean-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Code</th>
+                                <th>Department Identity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deptTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ➕ TAB 2: DEPLOY DEPARTMENT -->
+        <div id="deploy-dept" class="tab-panel">
+            <div class="panel partial-width-panel">
+                <h3>Deploy Department Infrastructure</h3>
+                <form id="deptForm">
+                    <input type="text" id="deptName" placeholder="Department Name (e.g., Computer Science)" required />
+                    <input type="text" id="deptCode" placeholder="Department Code (e.g., CSE)" class="margin-spacing-field" required />
+                    <button type="submit" class="primary-btn">Deploy Department</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 📖 TAB 3: LIST OF COURSES -->
+        <div id="view-courses" class="tab-panel">
+            <div class="panel">
+                <h3>Academic Course Registry Catalog</h3>
+                <!-- 📜 Scrollable Table Wrapper constraints height to exactly 5 elements out-of-the-box -->
+                <div class="scrollable-table-wrapper expansive-scrollbox">
+                    <table class="nested-clean-table">
+                        <thead>
+                            <tr>
+                                <th>Duration</th>
+                                <th>Course Title & Details</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courseTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ➕ TAB 4: DEPLOY COURSES -->
+        <div id="deploy-course" class="tab-panel">
+            <div class="panel partial-width-panel">
+                <h3>Academic Course Registry</h3>
+                <form id="courseForm">
+                    <input type="text" id="courseName" placeholder="Course Name (e.g., Web Architecture)" required />
+                    <input type="text" id="courseDuration" placeholder="Duration (e.g., 4 Months, 1 Semester)" required />
+                    <input type="number" id="courseFee" placeholder="Tuition Fee (e.g., 1500.00)" step="0.01" min="1" required />
+
+                    <select id="courseProgramYear" required>
+                        <option value="" disabled selected>-- Select Program Year --</option>
+                        <option value="1">Year 1</option>
+                        <option value="2">Year 2</option>
+                        <option value="3">Year 3</option>
+                        <option value="4">Year 4</option>
+                    </select>
+
+                    <select id="courseDept" required>
+                        <option value="" disabled selected>-- Select Department Reference --</option>
+                    </select>
+
+                    <button type="submit" class="primary-btn">Deploy Course</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ✍️ TAB 5: REGISTER FACULTY -->
+        <div id="register-faculty" class="tab-panel">
+            <div class="panel full-width">
+                <h3>Faculty Accounts Provisioning</h3>
+                <div class="form-wrapper-box-faculty">
+                    <h4 class="form-title-text">Register New Faculty Profile</h4>
+                    <form id="adminFacultyRegForm" class="grid-form-faculty">
+                        <input type="text" id="facRegName" placeholder="Faculty Full Name (e.g., Dr. Smith)" required />
+                        <input type="text" id="facRegUsername" placeholder="Unique Username (e.g., smith_doc)" required />
+                        <input type="email" id="facRegEmail" placeholder="faculty@university.edu" required />
+                        <input type="text" id="facRegSpecialization" placeholder="Specialization (e.g., Cyber Security)" required />
+                        <input type="password" id="facRegPassword" placeholder="Secure Password" minlength="6" required />
+
+                        <select id="facRegDept" class="span-two-columns" required>
+                            <option value="" disabled selected>-- Select Mapped Department --</option>
+                        </select>
+
+                        <button type="submit" class="primary-btn span-two-columns margin-top-button">Deploy Faculty Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 👥 TAB 6: LIST OF ALL FACULTY -->
+        <div id="view-faculty" class="tab-panel">
+            <div class="panel full-width">
+                <h3>Registered Institutional Faculty Roster</h3>
+                <div class="scrollable-table-wrapper">
+                    <table class="nested-clean-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Assigned Context</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="facultyProfilesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📝 TAB 7: STUDENT REGISTRATION -->
+        <div id="register-student" class="tab-panel">
+            <div class="panel full-width">
+                <h3>Student Accounts Provisioning</h3>
+                <div class="form-wrapper-box-student">
+                    <h4 class="form-title-text">Onboard New Student Profile</h4>
+                    <form id="adminStudentRegForm" class="grid-form-student">
+                        <input type="text" id="stdRegName" placeholder="Student Full Name (e.g., John Doe)" required />
+                        <input type="text" id="stdRegUsername" placeholder="Unique Login Username (e.g., john_std)" required />
+                        <input type="email" id="stdRegEmail" placeholder="student@university.edu" required />
+                        <input type="password" id="stdRegPassword" placeholder="Secure Password" minlength="6" required />
+
+                        <select id="stdRegDept" class="span-two-columns" required>
+                            <option value="" disabled selected>-- Select Mapped Department --</option>
+                        </select>
+
+                        <button type="submit" class="primary-btn span-two-columns margin-top-button">Deploy Student Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 👥 TAB 8: LIST OF REGISTERED STUDENTS -->
+        <div id="view-students" class="tab-panel">
+            <div class="panel full-width">
+                <h3>Registered Institutional Student Base</h3>
+                <div class="scrollable-table-wrapper">
+                    <table class="nested-clean-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Assigned Context</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <!-- id matches document.getElementById('profilesTable') in adminDashboard.js -->
+                        <tbody id="profilesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🎓 TAB 9: LIST OF STUDENTS ENROLLED -->
+        <div id="view-enrolled" class="tab-panel">
+            <div class="panel full-width">
+                <h3>Course Enrollment Roster</h3>
+
+                <!-- 🧑‍🏫 Assigned Instructor Meta Display Bar -->
+                <div id="assignedFacultyBox" class="assigned-faculty-box">
+                    Assigned Instructor: Querying registry...
+                </div>
+
+                <!-- 🎓 Enrolled Students Roster Grid Layout Table -->
+                <div class="scrollable-table-wrapper">
+                    <table class="nested-clean-table">
+                        <thead>
+                            <tr>
+                                <th>Enrollment ID</th>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Academic Year</th>
+                                <th>Term Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTableBody">
+                            <!-- Loaded dynamically via JavaScript trigger pipeline -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ─── UNIFIED MODAL DIALOG DISPLAY WINDOW (per-course quick view, still available from course table Actions) ─── -->
+    <div id="rosterModal" class="modal">
+        <div class="modal-content" style="max-width: 750px;">
+            <button class="close-modal" id="closeRosterModal">&times;</button>
+            <h3 id="rosterModalTitle" style="margin-bottom: 15px;">Course Overview</h3>
+
+            <div id="modalAssignedFacultyBox" class="assigned-faculty-box">
+                Assigned Instructor: Querying registry...
+            </div>
+
+            <h4 style="color: #4a5568; margin-bottom: 10px; font-size: 1rem;">Enrolled Student Roster</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Enrollment ID</th>
+                        <th>Student Name</th>
+                        <th>Student ID</th>
+                        <th>Academic Year</th>
+                        <th>Term Grade</th>
+                    </tr>
+                </thead>
+                <tbody id="modalRosterTableBody">
+                    <!-- Loaded dynamically via JavaScript trigger pipeline -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 🔌 External Modular JavaScript Bundle Link -->
+    <script type="module" src="../assets/js/adminDashboard.js"></script>
+
+    <!-- 🧭 Sidebar Tab Switching Logic -->
+    <script>
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+                item.classList.add('active');
+                const target = document.getElementById(item.dataset.target);
+                if (target) target.classList.add('active');
+
+                document.getElementById('currentNavTitle').textContent = item.textContent.trim().replace(/^\S+\s/, '');
+            });
+        });
+    </script>
+
+</body>
+</html>

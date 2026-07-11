@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registrar — Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="wordmark">Registrar</div>
+
+    <ul class="nav-tabs" id="navTabs">
+      <li><button class="nav-tab" data-section="departments" data-roles="ADMIN,FACULTY,STUDENT"><span class="idx">01</span>Departments</button></li>
+      <li><button class="nav-tab" data-section="courses" data-roles="ADMIN,FACULTY,STUDENT"><span class="idx">02</span>Courses</button></li>
+      <li><button class="nav-tab" data-section="faculty" data-roles="ADMIN"><span class="idx">03</span>Faculty</button></li>
+      <li><button class="nav-tab" data-section="students" data-roles="ADMIN,FACULTY"><span class="idx">04</span>Students</button></li>
+      <li><button class="nav-tab" data-section="enrollments" data-roles="ADMIN,FACULTY,STUDENT"><span class="idx">05</span>Enrollments</button></li>
+      <li><button class="nav-tab" data-section="addresses" data-roles="ADMIN,STUDENT"><span class="idx">06</span>Addresses</button></li>
+      <li><button class="nav-tab" data-section="accounts" data-roles="ADMIN"><span class="idx">07</span>Accounts</button></li>
+    </ul>
+
+    <div class="sidebar-foot">
+      <span class="stamp" id="roleStamp">—</span>
+      <div class="identity-line" id="identityLine">—</div>
+      <button class="signout" id="signOutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- DEPARTMENTS -->
+    <section class="section-panel" data-panel="departments">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Ledger 01</div>
+          <h1>Departments</h1>
+        </div>
+        <button class="btn btn-primary btn-small" data-toggle-form="departments">+ New department</button>
+      </div>
+      <div class="card hidden" id="form-card-departments">
+        <div class="card-head"><h2 id="form-title-departments">New department</h2></div>
+        <form id="form-departments">
+          <input type="hidden" id="departments-id">
+          <div class="form-grid">
+            <div class="field"><label for="departments-departmentName">Name</label><input id="departments-departmentName" required></div>
+            <div class="field"><label for="departments-departmentCode">Code</label><input id="departments-departmentCode" required></div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-small">Save department</button>
+            <button type="button" class="btn btn-ghost btn-small" data-cancel-form="departments">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div class="card"><div id="table-departments">Loading…</div></div>
+
+      <div class="card hidden" id="dept-catalog-card">
+        <div class="card-head"><h2 id="dept-catalog-title">Courses</h2></div>
+        <div class="year-tabs" id="dept-catalog-years"></div>
+        <div class="course-browse-list" id="dept-catalog-list"></div>
+      </div>
+    </section>
+
+    <!-- COURSES -->
+    <section class="section-panel" data-panel="courses">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Ledger 02</div>
+          <h1>Courses</h1>
+        </div>
+        <button class="btn btn-primary btn-small" data-toggle-form="courses">+ New course</button>
+      </div>
+      <div class="card hidden" id="form-card-courses">
+        <div class="card-head"><h2 id="form-title-courses">New course</h2></div>
+        <form id="form-courses">
+          <input type="hidden" id="courses-id">
+          <div class="form-grid">
+            <div class="field"><label for="courses-coursename">Course name</label><input id="courses-coursename" required></div>
+            <div class="field"><label for="courses-duration">Duration</label><input id="courses-duration" placeholder="e.g. 1 semester" required></div>
+            <div class="field"><label for="courses-fee">Fee</label><input id="courses-fee" type="number" step="0.01" min="0.01" required></div>
+            <div class="field"><label for="courses-departmentId">Department ID</label><input id="courses-departmentId" type="number" min="1" required></div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-small">Save course</button>
+            <button type="button" class="btn btn-ghost btn-small" data-cancel-form="courses">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div class="card"><div id="table-courses">Loading…</div></div>
+    </section>
+
+    <!-- FACULTY -->
+    <section class="section-panel" data-panel="faculty">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Ledger 03 — Admin only</div>
+          <h1>Faculty</h1>
+        </div>
+        <button class="btn btn-primary btn-small" data-toggle-form="faculty">+ New faculty</button>
+      </div>
+      <div class="card hidden" id="form-card-faculty">
+        <div class="card-head"><h2 id="form-title-faculty">New faculty</h2></div>
+        <form id="form-faculty">
+          <input type="hidden" id="faculty-id">
+          <div class="form-grid">
+            <div class="field"><label for="faculty-facultyName">Name</label><input id="faculty-facultyName" required></div>
+            <div class="field"><label for="faculty-email">Email</label><input id="faculty-email" type="email" required></div>
+            <div class="field"><label for="faculty-specialization">Specialization</label><input id="faculty-specialization" required></div>
+            <div class="field"><label for="faculty-departmentId">Department ID</label><input id="faculty-departmentId" type="number" min="1" required></div>
+          </div>
+          <p class="hint">Specialization must match the department: CSE → Java / Python / AI, ECE → VLSI / Embedded, Mechanical → CAD / Thermodynamics.</p>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-small">Save faculty</button>
+            <button type="button" class="btn btn-ghost btn-small" data-cancel-form="faculty">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div class="card"><div id="table-faculty">Loading…</div></div>
+    </section>
+
+    <!-- STUDENTS -->
+    <section class="section-panel" data-panel="students">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Ledger 04</div>
+          <h1>Students</h1>
+        </div>
+        <button class="btn btn-primary btn-small hidden" id="btn-new-student" data-toggle-form="students">+ New student</button>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Search</h2></div>
+        <div class="field-row">
+          <div class="field"><label for="students-search">By name</label><input id="students-search" placeholder="Start typing a name…"></div>
+          <div class="field"><label for="students-dept-filter">By department ID</label><input id="students-dept-filter" type="number" min="1"></div>
+        </div>
+      </div>
+
+      <div class="card hidden" id="form-card-students">
+        <div class="card-head"><h2 id="form-title-students">New student</h2></div>
+        <form id="form-students">
+          <input type="hidden" id="students-id">
+          <div class="form-grid">
+            <div class="field"><label for="students-name">Name</label><input id="students-name" required></div>
+            <div class="field"><label for="students-email">Email</label><input id="students-email" type="email" required></div>
+            <div class="field"><label for="students-departmentId">Department ID</label><input id="students-departmentId" type="number" min="1" required></div>
+            <div class="field"><label for="students-courseIds">Course IDs (comma-separated, optional)</label><input id="students-courseIds" placeholder="e.g. 1, 2"></div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-small">Save student</button>
+            <button type="button" class="btn btn-ghost btn-small" data-cancel-form="students">Cancel</button>
+          </div>
+        </form>
+      </div>
+      <div class="card"><div id="table-students">Loading…</div></div>
+    </section>
+
+    <!-- ENROLLMENTS -->
+    <section class="section-panel" data-panel="enrollments">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Ledger 05</div>
+          <h1>Enrollments</h1>
+        </div>
+      </div>
+
+      <div class="card hidden" id="browse-card">
+        <div class="card-head">
+          <h2>Browse by department</h2>
+        </div>
+        <p class="hint">Pick a department to see its courses, then choose a year and enroll. Your student ID above (in "Look up") is used for the enrollment — enter it first if you haven't.</p>
+        <div class="dept-grid" id="dept-grid">Loading departments…</div>
+        <div class="year-tabs hidden" id="browse-year-tabs"></div>
+        <div class="course-browse-list" id="course-browse-list"></div>
+      </div>
+
+      <div class="two-col">
+        <div class="card" id="enroll-card-view">
+          <div class="card-head"><h2 id="enroll-view-title">Enrollments</h2></div>
+          <div class="field-row" id="enroll-lookup-row">
+            <div class="field"><label for="enroll-lookup-id">Student ID</label><input id="enroll-lookup-id" type="number" min="1"></div>
+            <div class="field" style="display:flex; align-items:flex-end;"><button class="btn btn-ghost btn-small" id="enroll-lookup-btn">Look up</button></div>
+          </div>
+          <div id="table-enrollments">Loading…</div>
+        </div>
+
+        <div class="card" id="enroll-card-action">
+          <div class="card-head"><h2 id="enroll-action-title">Enroll in a course</h2></div>
+          <form id="form-enroll-new">
+            <div class="field"><label for="enroll-studentId">Student ID</label><input id="enroll-studentId" type="number" min="1" required></div>
+            <div class="field"><label for="enroll-courseId">Course ID</label><input id="enroll-courseId" type="number" min="1" required></div>
+            <div class="field">
+              <label for="enroll-year">Academic year</label>
+              <select id="enroll-year"></select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-small">Enroll</button>
+          </form>
+
+          <div id="faculty-enroll-tools" class="hidden" style="margin-top:18px;">
+            <div class="card-head"><h2>Complete a course</h2></div>
+            <div class="field-row">
+              <div class="field"><label for="complete-enrollmentId">Enrollment ID</label><input id="complete-enrollmentId" type="number" min="1"></div>
+              <div class="field"><label for="complete-grade">Grade</label><input id="complete-grade" placeholder="e.g. A"></div>
+            </div>
+            <button class="btn btn-ghost btn-small" id="complete-btn">Mark complete</button>
+          </div>
+
+          <div id="admin-enroll-tools" class="hidden" style="margin-top:18px;">
+            <div class="card-head"><h2>Change status / remove</h2></div>
+            <div class="field-row">
+              <div class="field"><label for="status-enrollmentId">Enrollment ID</label><input id="status-enrollmentId" type="number" min="1"></div>
+              <div class="field">
+                <label for="status-value">New status</label>
+                <select id="status-value">
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="COMPLETED">COMPLETED</option>
+                  <option value="DROPPED">DROPPED</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-small" id="status-btn">Update status</button>
+            <button class="btn btn-danger btn-small" id="delete-enrollment-btn">Delete enrollment</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ADDRESSES -->
+    <section class="section-panel" data-panel="addresses">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Ledger 06</div>
+          <h1>Addresses</h1>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head"><h2>Look up / save an address</h2></div>
+          <form id="form-address">
+            <input type="hidden" id="address-recordId">
+            <div class="form-grid">
+              <div class="field"><label for="address-studentId">Student ID</label><input id="address-studentId" type="number" min="1" required></div>
+              <div class="field"><label for="address-city">City</label><input id="address-city" required></div>
+              <div class="field"><label for="address-state">State</label><input id="address-state" required></div>
+              <div class="field"><label for="address-pincode">Pincode (6 digits)</label><input id="address-pincode" pattern="[0-9]{6}" required></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-small">Save address</button>
+              <button type="button" class="btn btn-danger btn-small" id="address-delete-btn">Delete</button>
+            </div>
+            <p class="hint">Saving a new address shows its record number here. There's no lookup by student ID yet, so note that number if you'll need to edit or delete this address later.</p>
+          </form>
+        </div>
+
+        <div class="card" id="admin-address-list-card">
+          <div class="card-head"><h2>All addresses</h2></div>
+          <div id="table-addresses">Loading…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCOUNTS (admin only) -->
+    <section class="section-panel" data-panel="accounts">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Ledger 07 — Admin only</div>
+          <h1>Accounts</h1>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head"><h2>Add a faculty login</h2></div>
+          <p class="hint">Creates a login account with the FACULTY role. This is separate from adding a faculty member's department record — do that in the Faculty tab too, so their profile shows up there.</p>
+          <form id="form-register-faculty">
+            <div class="field"><label for="reg-faculty-username">Full name</label><input id="reg-faculty-username" required></div>
+            <div class="field"><label for="reg-faculty-email">Email</label><input id="reg-faculty-email" type="email" required></div>
+            <div class="field"><label for="reg-faculty-password">Temporary password</label><input id="reg-faculty-password" type="password" minlength="4" required></div>
+            <button type="submit" class="btn btn-primary btn-small">Create faculty login</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Add an admin login</h2></div>
+          <p class="hint">Creates another account with full ADMIN access. Use sparingly.</p>
+          <form id="form-register-admin">
+            <div class="field"><label for="reg-admin-username">Full name</label><input id="reg-admin-username" required></div>
+            <div class="field"><label for="reg-admin-email">Email</label><input id="reg-admin-email" type="email" required></div>
+            <div class="field"><label for="reg-admin-password">Temporary password</label><input id="reg-admin-password" type="password" minlength="4" required></div>
+            <button type="submit" class="btn btn-danger btn-small">Create admin login</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="api.js"></script>
+<script src="ui.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Portal Suite</title>
+    <!-- 🎨 Connected to External Dashboard Stylesheet -->
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body class="admin-dashboard-body">
+
+    <!-- 🧭 LEFT NAVIGATION SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            🧑‍🏫 Faculty Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active" data-target="view-grading-roster">📊 Evaluation Roster</li>
+        </ul>
+        <div class="sidebar-footer">
+            <button id="logoutBtn" class="logout-btn">🚪 Logout Session</button>
+        </div>
+    </nav>
+
+    <!-- 🖥️ MAIN WORKSPACE CONSOLE WINDOW -->
+    <main class="main-content">
+
+        <!-- 🔧 FIX: this block was missing its opening <div> before "Faculty Session:",
+             leaving an unmatched closing </div> that broke the surrounding layout. -->
+        <div class="top-navbar">
+            <h2 id="currentNavTitle" class="nav-title-header">Evaluation Roster</h2>
+            <div>
+                <strong>Faculty Session:</strong>
+                <span id="facultyWelcomeName" class="badge-text-admin">Welcome, Instructor</span>
+            </div>
+        </div>
+
+        <!-- ──────────────── TAB PANEL CONTENT LAYER ──────────────── -->
+
+        <!-- 📊 TAB 1: ASSIGNED ENROLLMENT & GRADING ROSTER -->
+        <div id="view-grading-roster" class="tab-panel active">
+            <div class="panel">
+                <h3>Assigned Class Enrollment & Grading Roster</h3>
+                <div class="scrollable-table-wrapper expansive-scrollbox">
+                    <table class="nested-clean-table">
+                        <thead>
+                            <tr>
+                                <th>Enrollment ID</th>
+                                <th>Student Name</th>
+                                <th>Enrolled Course</th>
+                                <th>Academic Year</th>
+                                <th>Current Grade Status</th>
+                                <th>Action Choice</th>
+                            </tr>
+                        </thead>
+                        <tbody id="facultyRosterTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 📝 PERFORMANCE GRADING MODAL POPUP DIALOG WINDOW -->
+    <div id="gradeModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="close-modal" id="closeGradeModal">&times;</button>
+            <h3 class="modal-headline">Assign Academic Performance Mark</h3>
+            <form id="gradeForm">
+                <input type="hidden" id="modalEnrollId" />
+
+                <label class="form-field-label">Letter Grade / Percentage Value</label>
+                <input type="text" id="studentGradeInput" placeholder="e.g., A+, B, 92%, Excellent" required />
+
+                <button type="submit" class="primary-btn" style="margin-top: 10px;">Post Official Grade Change</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 🔌 External Modular Faculty JavaScript Bundle Link -->
+    <script type="module" src="../assets/js/facultyDashboard.js"></script>
+
+</body>
+</html>

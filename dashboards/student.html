@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Control Center - Portal Suite</title>
+    <!-- 🎨 Connected to External Dashboard Stylesheet -->
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <style>
+        /* Scoped additions for the enhanced student dashboard.
+           Kept local so we don't have to touch the shared dashboard.css file. */
+
+        .catalog-toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .catalog-toolbar input[type="text"] {
+            flex: 1;
+            min-width: 220px;
+        }
+        .catalog-toolbar select {
+            min-width: 160px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #4a5568;
+        }
+
+        #catalogStatsBar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .stat-pill {
+            flex: 1;
+            min-width: 140px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .stat-pill strong {
+            font-size: 1.4rem;
+            color: #2d3748;
+        }
+        .stat-pill span {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+        .stat-pill-success strong {
+            color: #2f855a;
+        }
+
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+        }
+        .toast-item {
+            padding: 12px 18px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .toast-item.toast-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .toast-success { background: #2f855a; }
+        .toast-error { background: #c53030; }
+
+        .profile-summary-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        .profile-row {
+            padding: 6px 0;
+            color: #4a5568;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .profile-row:last-child { border-bottom: none; }
+
+        .info-note {
+            background: #fffaf0;
+            border: 1px solid #feebc8;
+            color: #7b5b12;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            margin-top: 14px;
+        }
+
+        /* Fallback button styling in case dashboard.css doesn't already define these */
+        .action-btn.btn-danger {
+            background: #c53030;
+            color: #fff;
+            border: none;
+        }
+        .action-btn.btn-danger:hover {
+            background: #9b2c2c;
+        }
+        .action-btn.btn-secondary {
+            background: #edf2f7;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body class="admin-dashboard-body">
+
+    <!-- 🧭 LEFT NAVIGATION SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            🎓 Student Portal
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active" data-target="view-catalog">📖 Course Registration</li>
+            <li class="sidebar-item" data-target="view-enrollments">🎓 My Enrollments</li>
+            <li class="sidebar-item" data-target="view-profile">👤 My Profile</li>
+            <li class="sidebar-item" data-target="configure-address">🏠 Residential Address</li>
+        </ul>
+        <div class="sidebar-footer">
+            <button id="logoutBtn" class="logout-btn">🚪 Logout Session</button>
+        </div>
+    </nav>
+
+    <!-- 🖥️ MAIN WORKSPACE CONSOLE WINDOW -->
+    <main class="main-content">
+
+        <div class="top-navbar">
+            <h2 id="currentNavTitle" class="nav-title-header">Course Registration</h2>
+            <div>
+                <strong>Student Session:</strong>
+                <span id="stdWelcome" class="badge-text-admin">Loading profile contexts...</span>
+            </div>
+        </div>
+
+        <!-- ──────────────── TAB PANEL CONTENT LAYERS ──────────────── -->
+
+        <!-- 📖 TAB 1: DYNAMIC COURSE ENROLLMENT SELECTION PLATFORM -->
+        <div id="view-catalog" class="tab-panel active">
+            <div class="panel">
+                <h3>Academic Course Registration Catalog</h3>
+
+                <!-- Quick stats so a student instantly sees how many courses exist and how many they've taken -->
+                <div id="catalogStatsBar"></div>
+
+                <div class="catalog-toolbar">
+                    <input type="text" id="catalogSearchField" placeholder="Search catalog by course title..." />
+                    <select id="departmentFilterSelect">
+                        <option value="ALL">All Departments</option>
+                    </select>
+                    <select id="yearFilterSelect">
+                        <option value="ALL">All Program Years</option>
+                        <option value="1">Year 1</option>
+                        <option value="2">Year 2</option>
+                        <option value="3">Year 3</option>
+                        <option value="4">Year 4</option>
+                    </select>
+                </div>
+
+                <div class="scrollable-table-wrapper expansive-scrollbox">
+                    <table class="nested-clean-table">
+                        <thead>
+                            <tr>
+                                <th>Duration</th>
+                                <th>Course</th>
+                                <th>Department</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentCatalogTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🎓 TAB 2: MY ENROLLMENTS — everything the student has already signed up for, with drop support -->
+        <div id="view-enrollments" class="tab-panel">
+            <div class="panel">
+                <h3>My Enrolled Courses</h3>
+                <div class="scrollable-table-wrapper expansive-scrollbox">
+                    <table class="nested-clean-table">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Duration</th>
+                                <th>Department</th>
+                                <th>Status / Term Info</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="myEnrollmentsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 👤 TAB 3: MY PROFILE — read-only summary (profile edits are Admin-managed now) -->
+        <div id="view-profile" class="tab-panel">
+            <div class="panel partial-width-panel">
+                <h3>My Profile</h3>
+
+                <div id="profileSummaryView" class="profile-summary-box"></div>
+
+                <div class="info-note">
+                    ℹ️ Profile details (name, email, department) are managed by the administration
+                    office and can't be edited from the student portal. Contact your admin office
+                    if any of this information needs to change.
+                </div>
+            </div>
+        </div>
+
+        <!-- 🏠 TAB 4: ADDRESS CONFIGURATION PROFILE PANEL -->
+        <div id="configure-address" class="tab-panel">
+            <div class="panel partial-width-panel">
+                <h3>Residential Mailing Address Record</h3>
+                <form id="addressForm">
+                    <h4 id="addressFormTitle" class="form-title-text" style="margin-bottom: 5px;">Add Residential Address</h4>
+
+                    <label class="form-field-label">City Location</label>
+                    <input type="text" id="addrCity" placeholder="e.g., Visakhapatnam" required />
+
+                    <label class="form-field-label">State Location</label>
+                    <input type="text" id="addrState" placeholder="e.g., Andhra Pradesh" required />
+
+                    <label class="form-field-label">Postal Pincode (Exactly 6 digits)</label>
+                    <input type="text" id="addrPincode" placeholder="e.g., 530001" maxlength="6" pattern="^[0-9]{6}$" title="Pincode must contain exactly 6 digits" required />
+
+                    <div class="address-actions">
+                        <button type="submit" id="addressSubmitBtn" class="primary-btn">Save Address</button>
+                        <button type="button" id="addressDeleteBtn" class="action-btn btn-danger" style="display:none;">Remove Address</button>
+                    </div>
+                </form>
+
+                <h4 class="form-title-text" style="margin-top: 20px; margin-bottom: 5px;">Currently Configured Address:</h4>
+                <div id="currentAddressDetailView" class="info-alert-callout-box" style="background:#f7fafc; color:#4a5568; border-color:#e2e8f0;">
+                    No primary address configured yet.
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Legacy summary hook kept for compatibility with existing renderCurrentAddress() calls -->
+    <div id="currentAddressView" style="display:none;"></div>
+
+    <!-- 🔌 External Modular JavaScript Bundle Link -->
+    <script type="module" src="../assets/js/studentDashboard.js"></script>
+
+</body>
+</html>
